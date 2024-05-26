@@ -34,6 +34,16 @@ switch ($_POST) {
     case isset($_POST['btnVoltarDocente']):
         header("Location: pagina_professor.php");
         break;
+
+    case isset($_POST['btnAdicionarAgenda']):
+        adicionarAgenda();
+        break;
+    case isset($_POST['btnExcluirAgenda']):
+        excluirAgenda($_POST['cod']);
+        break;
+    case isset($_POST['btnAdicionarQuestao']):
+        adicionarQuestao();
+        break;
 }
 function conectar(){
     require_once 'ConexaoBD.php';
@@ -170,7 +180,7 @@ function cadastro()
     } else {
         echo '
         <a href="index.php">
-            <h1 class="w3-button w3-teal">Erro na conexão! </h1>
+            <h1 class="w3-button w3-red">Erro na conexão! </h1>
         </a> 
         ';
     }
@@ -233,4 +243,94 @@ function atualizar()
         </a> 
         ';
     }
+}
+
+
+function adicionarAgenda(){
+    $dataIni = $_POST['dataIni'];
+    $dataFin = $_POST['dataFin'];
+    $disciplina = $_POST['disciplina'];
+    $numero = $_POST['numeroAgenda'];
+
+    $conexao = conectar();
+    //Verificando o tipo de usuário
+    
+    $sql = "INSERT INTO `agenda` (`disciplina`, `dataInicial`, `dataFinal`, `numAgenda`) 
+    VALUES ('$disciplina', '$dataIni', '$dataFin', '$numero')";
+    
+
+
+    if ($conexao->query($sql) === TRUE) {
+        $id = mysqli_insert_id($conexao);
+        echo '
+        <a href="criarAgenda.php">
+            <h1 class="w3-button w3-teal">Agenda Criada com sucesso! </h1>
+        </a> 
+        ';
+        }else{
+            echo '
+            <a href="criarAgenda.php">
+                <h1 class="w3-button w3-red">Erro na conexão! </h1>
+            </a> 
+            ';
+        }
+
+}
+
+function excluirAgenda($cod){
+    
+    $conexao = conectar();
+    //Verificando o tipo de usuário
+    
+    $sql = "DELETE FROM agenda WHERE codAgenda = $cod";
+    
+
+
+    if ($conexao->query($sql) === TRUE) {
+        $id = mysqli_insert_id($conexao);
+        echo '
+        <a href="criarAgenda.php">
+            <h1 class="w3-button w3-teal">Agenda Excluida com sucesso! </h1>
+        </a> 
+        ';
+        }else{
+            echo '
+            <a href="criarAgenda.php">
+                <h1 class="w3-button w3-red">Erro na exclusão! </h1>
+            </a> 
+            ';
+        }
+}
+
+function adicionarQuestao(){
+    $disciplina = $_POST['txtMateria'];
+    $agenda = $_POST['txtAgenda'];
+    $pergunta = $_POST['txtPergunta'];
+    $o1 = $_POST['txtOpcao1'];
+    $o2 = $_POST['txtOpcao2'];
+    $o3 = $_POST['txtOpcao3'];
+    $o4 = $_POST['txtOpcao4'];
+
+    $conexao = conectar();
+    //Verificando o tipo de usuário
+    
+    $sql = "INSERT INTO `questionario` (`disciplina`, `pergunta`, `codAgenda`, `opcao1`, `opcao2`, `opcao3`, `opcao4`) 
+    VALUES ('$disciplina', '$pergunta', '$agenda', '$o1', '$o2', '$o3', '$o4')";
+    
+
+
+    if ($conexao->query($sql) === TRUE) {
+        $id = mysqli_insert_id($conexao);
+        echo '
+        <a href="pagina_professor.php">
+            <h1 class="w3-button w3-teal">Questionário feito com sucesso! </h1>
+        </a> 
+        ';
+        }else{
+            echo '
+            <a href="pagina_professor.php">
+                <h1 class="w3-button w3-red">Erro no processo! </h1>
+            </a> 
+            ';
+        }
 }

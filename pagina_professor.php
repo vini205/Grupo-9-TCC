@@ -43,6 +43,9 @@
         <a href="atualizarDados.php" class="w3-button w3-margin w3-round-large w3-teal">
            Atualizar dados
         </a>
+        <a href="criarAgenda.php" class="w3-button w3-margin w3-round-large w3-teal">
+           Gerenciar agendas
+        </a>
     </div>
     <div class="w3-row">
     <h2 class="w3-center">Meus dados</h2>
