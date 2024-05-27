@@ -21,7 +21,7 @@
     
     // Recuperando o nome do usuario com base no login da sessão
     if(!isset($_SESSION['logado'])){
-        echo 'Não logado';
+        header("Location: usuarioNaoLogado.php");
     }
     $login = $_SESSION['logado'];
     

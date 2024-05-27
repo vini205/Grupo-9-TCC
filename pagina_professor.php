@@ -13,6 +13,10 @@
 
     <?php
     session_start();
+
+    if(!isset($_SESSION['logado'])){
+        header("Location: usuarioNaoLogado.php");
+    }
     require_once 'ConexaoBD.php';
     $conn = new ConexaoBD();
     $conexao = $conn->conectar();
@@ -37,7 +41,7 @@
         <a href="cadastroQuestoes.php" class="w3-button w3-margin w3-margin-right w3-round-large w3-teal">
             Cadastrar Questões
         </a>
-        <a href="listar.php" class="w3-button w3-margin w3-round-large w3-teal">
+        <a href="listar_notas_professor.php" class="w3-button w3-margin w3-round-large w3-teal">
             Verificar notas
         </a>
         <a href="atualizarDados.php" class="w3-button w3-margin w3-round-large w3-teal">
@@ -45,6 +49,10 @@
         </a>
         <a href="criarAgenda.php" class="w3-button w3-margin w3-round-large w3-teal">
            Gerenciar agendas
+        </a>
+        
+        <a href="SelecionarQuestionarios.php" class="w3-button w3-margin w3-round-large w3-teal">
+           Ver questionários
         </a>
     </div>
     <div class="w3-row">

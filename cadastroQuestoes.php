@@ -11,7 +11,7 @@ if( $conexao->connect_errno){
 
 // Recuperando o nome do professor com base no login da sessão
 if(!isset($_SESSION['logado'])){
-    echo 'Não logado';
+    header("Location: usuarioNaoLogado.php");
 }
 $login = $_SESSION['logado'];
 
@@ -43,7 +43,7 @@ $professor = $resultado->fetch_assoc();
             <label class="w3-text-teal" style="font-weight: bold;">Matéria</label>
             <input name="txtMateria" value="<?= $professor['disciplina']?>" class="w3-input w3-light-grey w3-border"><br>
 
-            <label for="Agenda" class="w3-text-teal w3-label" style="font-weight: bold;" > Agenda</label>
+            <label for="Agenda" class="w3-text-teal w3-label" style="font-weight: bold;" > Código da agenda</label>
             <input name="txtAgenda"  class="w3-input w3-light-grey w3-border" list="agendas"><br>
             
             <label class="w3-text-teal" style="font-weight: bold;">Pergunta</label>

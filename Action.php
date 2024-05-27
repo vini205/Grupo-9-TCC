@@ -34,17 +34,52 @@ switch ($_POST) {
     case isset($_POST['btnVoltarDocente']):
         header("Location: pagina_professor.php");
         break;
-
+        
+        //ADICIONAR AGENDA
     case isset($_POST['btnAdicionarAgenda']):
         adicionarAgenda();
         break;
+
+        //EXCLUIR AGENDA
     case isset($_POST['btnExcluirAgenda']):
         excluirAgenda($_POST['cod']);
         break;
+        //ADICIONAR QUESTÃO
     case isset($_POST['btnAdicionarQuestao']):
         adicionarQuestao();
         break;
+
+        // VER QUESTIONARIO
+    case isset($_POST['btnVerQuestionario']):
+        echo 'opa';
+        verQuestionario($_POST['cod']);
+        break;
+
+    // EXCLUIR OU ATUALIZAR QUESTAO
+    case isset($_POST['btnAtualizarQuestao']):
+        atualizarQuestao($_POST['codQuestionario']);
+        break;
+    case isset($_POST['btnApagarQuestao']):
+        apagarQuestao($_POST['codQuestionario']);
+        break;
+
+    // ENVIAR RESPOSTA
+    case isset($_POST['btnEnviarResposta']):
+        enviarResposta();
+        break;
+
+    case isset($_POST['btnVoltar']):
+        echo 12;
+        echo $_SESSION['professor']; 
+        if($_SESSION['professor']){
+            //header("Location: pagina_professor.php");
+        }else{
+            //header("Location: pagina_aluno.php");
+        }
+        break;
+    
 }
+
 function conectar(){
     require_once 'ConexaoBD.php';
 
@@ -165,14 +200,14 @@ function cadastro()
         if ($conexao->query($sql2)) {
             echo '
             <a href="index.php">
-                <h1 class="w3-button w3-teal">Cadastro feito com Sucesso! </h1>
+                <h1 class="w3-button w3-display-middle  w3-teal">Cadastro feito com Sucesso! </h1>
             </a> 
             ';
             
         } else {
             echo '
             <a href="index.php">
-                <h1 class="w3-button w3-teal">Erro na atualização! </h1>
+                <h1 class="w3-button w3-display-middle w3-teal">Erro na atualização! </h1>
             </a> 
             ';
         }
@@ -180,7 +215,7 @@ function cadastro()
     } else {
         echo '
         <a href="index.php">
-            <h1 class="w3-button w3-red">Erro na conexão! </h1>
+            <h1 class="w3-display-middle w3-button w3-red">Erro na conexão! </h1>
         </a> 
         ';
     }
@@ -263,13 +298,13 @@ function adicionarAgenda(){
     if ($conexao->query($sql) === TRUE) {
         $id = mysqli_insert_id($conexao);
         echo '
-        <a href="criarAgenda.php">
-            <h1 class="w3-button w3-teal">Agenda Criada com sucesso! </h1>
+        <a href="criarAgenda.php"class="w3-display-middle">
+            <h1 class="w3-button w3-display-middle w3-teal">Agenda Criada com sucesso! </h1>
         </a> 
         ';
         }else{
             echo '
-            <a href="criarAgenda.php">
+            <a href="criarAgenda.php" >
                 <h1 class="w3-button w3-red">Erro na conexão! </h1>
             </a> 
             ';
@@ -289,7 +324,7 @@ function excluirAgenda($cod){
     if ($conexao->query($sql) === TRUE) {
         $id = mysqli_insert_id($conexao);
         echo '
-        <a href="criarAgenda.php">
+        <a href="criarAgenda.php" class="w3-display-middle">
             <h1 class="w3-button w3-teal">Agenda Excluida com sucesso! </h1>
         </a> 
         ';
@@ -322,7 +357,7 @@ function adicionarQuestao(){
     if ($conexao->query($sql) === TRUE) {
         $id = mysqli_insert_id($conexao);
         echo '
-        <a href="pagina_professor.php">
+        <a href="pagina_professor.php" class="w3-display-middle">
             <h1 class="w3-button w3-teal">Questionário feito com sucesso! </h1>
         </a> 
         ';
@@ -333,4 +368,118 @@ function adicionarQuestao(){
             </a> 
             ';
         }
+}
+
+function verQuestionario($codAgenda){
+    
+    $_SESSION['codAgenda'] = $codAgenda;
+    
+    
+    //Verificando o tipo de usuário
+    if( $_SESSION['professor'] == true){
+        header("Location: visualizarQuestionario.php");
+    }else{
+        header("Location: responderQuestionario.php");
+    } 
+}
+
+function atualizarQuestao($codQuestionario){
+    $disciplina = $_POST['txtMateria'];
+    $agenda = $_POST['txtAgenda'];
+    $pergunta = $_POST['txtPergunta'];
+    $o1 = $_POST['txtOpcao1'];
+    $o2 = $_POST['txtOpcao2'];
+    $o3 = $_POST['txtOpcao3'];
+    $o4 = $_POST['txtOpcao4'];
+
+    $conexao = conectar();
+    
+    $sql = "UPDATE `questionario` SET `disciplina` = '$disciplina', `pergunta` = '$pergunta', `codAgenda` = '$agenda', 
+    `opcao1` = '$o1', `opcao2` = '$o2', `opcao3` = '$o3', `opcao4` = '$o4' WHERE `questionario`.`codQuestionario` = $codQuestionario";
+    
+
+
+    if ($conexao->query($sql) === TRUE) {
+        $id = mysqli_insert_id($conexao);
+        echo '
+        <a href="visualizarQuestionario.php" class="w3-display-middle">
+            <h1 class="w3-button w3-teal">Questionário atualizado com sucesso! </h1>
+        </a> 
+        ';
+        }else{
+            echo '
+            <a href="pagina_professor.php">
+                <h1 class="w3-button w3-red">Erro no processo! </h1>
+            </a> 
+            ';
+        }
+}
+
+function apagarQuestao($codQuestionario){
+    $conexao = conectar();
+
+    $sql = "DELETE FROM questionario WHERE `questionario`.`codQuestionario` = $codQuestionario";
+    
+
+
+    if ($conexao->query($sql) === TRUE) {
+        $id = mysqli_insert_id($conexao);
+        echo '
+        <a href="SelecionarQuestionarios.php" class="w3-display-middle">
+            <h1 class="w3-button w3-teal">Questão apagada com sucesso! </h1>
+        </a> 
+        ';
+        }else{
+            echo '
+            <a href="pagina_professor.php">
+                <h1 class="w3-button w3-red">Erro no processo! </h1>
+            </a> 
+            ';
+        }
+}
+
+function enviarResposta(){
+    $idPessoa = $_SESSION['id_pessoa'];
+    $conexao = conectar();
+    $codAgenda = $_SESSION['codAgenda'];   
+    $nota =0;
+
+    $sql = "SELECT * FROM questionario  WHERE codAgenda = '$codAgenda';";
+    $resultado = $conexao->query($sql);
+    $qtdQuestoes = 0;
+    //vê no banco de dados qual é a resposta certa e confere com a do aluno
+    while($row = $resultado->fetch_object()){
+        $qtdQuestoes++;
+        $resposta = $_POST[$row->codQuestionario];
+        $certa = $row->opcao1;
+        if($resposta == $certa){
+            $nota++;
+        }
+    }
+    $nota = 10*($nota/$qtdQuestoes);
+    
+    //Resgatando dados
+    
+    $login = $_SESSION['logado'];
+    $sql = "SELECT codAluno FROM  aluno INNER JOIN pessoa p ON aluno.id_pessoa = p.id WHERE aluno.username = '$login'";
+    $resultado = $conexao->query($sql);
+    $usuario = $resultado->fetch_assoc();
+    $codAluno = $usuario['codAluno'];
+
+    $sql = "INSERT INTO `nota` ( `codAluno`, `codAgenda`, `nota`) VALUES ( '$codAluno', '$codAgenda', '$nota')";
+
+    if ($conexao->query($sql) === TRUE) {
+        echo "
+        <a href='pagina_aluno.php' class='w3-display-middle'>
+            <h1 class='w3-button w3-teal'>Nota registrada com Sucesso! Nota: $nota </h1>
+        </a> 
+        ";
+        }else{
+            echo '
+            <a href="pagina_aluno.php">
+                <h1 class="w3-button w3-red">Erro! </h1>
+            </a> 
+            ';
+        }
+    
 }

@@ -25,13 +25,14 @@
     // Recuperando o nome do aluno com base no login da sessão
     
     if(!isset($_SESSION['logado'])){
-        echo 'Não logado';
+        header("Location: usuarioNaoLogado.php");
     }
     $login = $_SESSION['logado'];
     $sql = "SELECT * FROM  aluno INNER JOIN pessoa p ON aluno.id_pessoa = p.id WHERE aluno.username = '$login'";
     $resultado = $conexao->query($sql);
     $aluno = $resultado->fetch_assoc();
     $nome_aluno = $aluno['username'];
+    $_SESSION['codAluno'] = $aluno['codAluno']; 
     
     
     // Exibindo o nome do aluno
@@ -51,7 +52,7 @@
     <?php echo "<h1 class='w3-center w3-teal w3-round-large w3-margin'>Bem-vindo, $nome_aluno </h1>" ?>
     </div>
     <div class="w3-row">
-        <a href="questionarios.php" class="w3-button w3-margin w3-margin-right w3-round-large w3-teal">
+        <a href="SelecionarQuestionarios.php" class="w3-button w3-margin w3-margin-right w3-round-large w3-teal">
             Responder aos questionários
         </a>
         <a href="listar_notas.php" class="w3-button w3-margin w3-round-large w3-teal">

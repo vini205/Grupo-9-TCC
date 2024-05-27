@@ -11,7 +11,7 @@ if( $conexao->connect_errno){
 
 // Recuperando o nome do professor com base no login da sessão
 if(!isset($_SESSION['logado'])){
-    echo 'Não logado';
+    header("Location: usuarioNaoLogado.php");
 }
 $login = $_SESSION['logado'];
 
